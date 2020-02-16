@@ -1,6 +1,7 @@
 import torch
 import torchvision
 import torchvision.transforms as transforms
+import torch.optim as optim
 
 def datasetL():
     transform = transforms.Compose(
@@ -21,3 +22,7 @@ def datasetL():
                'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
     return trainloader, testloader, classes
 
+def loss(self):
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+    return criterion, optimizer
