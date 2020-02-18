@@ -2,6 +2,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 
+# This is Afnan's first neural network from scratch :-)
+
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
@@ -24,6 +26,6 @@ class Net(nn.Module):
     def loss(self):
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
-        return criterion, optimizer
+        return criterion, optimize
 
 net = Net()
