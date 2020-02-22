@@ -57,8 +57,7 @@ def train(trainloader, experiment_name):
 if __name__ == '__main__':
     # Card 3
     parser = ArgumentParser(description="Arguments for training the neural network according to the code design")
-    parser.add_argument('exp_name', type='str', help="the experiment name")
-    parser.add_argument()
+    parser.add_argument('--exp_name', type=str, help="the experiment name")
 
     args = parser.parse_args()
 

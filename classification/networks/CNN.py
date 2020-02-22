@@ -37,6 +37,6 @@ class Net(nn.Module):
     def loss(self):
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
-        return criterion, optimize
+        return criterion, optimizer
 
 net = Net()
