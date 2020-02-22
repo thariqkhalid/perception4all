@@ -1,3 +1,14 @@
+"""
+__author__ = "Afnan Qalas Balghaith, Thariq Khalid"
+__copyright__ = "Copyright 2020, The Perception4all Project"
+__credits__ = ["Afnan Balghaith", "Thariq Khalid"]
+
+__maintainer__ = "Thariq Khalid"
+__email__ = "thariq.khalid@gmail.com"
+__status__ = "Research and Development"
+
+"""
+
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
