@@ -13,6 +13,7 @@ __status__ = "Research and Development"
 import torch
 from torch.utils.tensorboard import SummaryWriter
 from argparse import ArgumentParser
+import matplotlib.pyplot as plt
 
 # local imports
 import data_loader
@@ -60,11 +61,12 @@ if __name__ == '__main__':
     parser.add_argument('--exp_name', type=str, help="the experiment name")
 
     args = parser.parse_args()
-
     experiment_name = args.exp_name
 
     trainloader, _, _ = data_loader.datasetL()
-    net = CNN.net
+    net = CNN.Net()
+
+
     criterion, optimizer = net.loss()
     train(trainloader, experiment_name)
 
