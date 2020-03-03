@@ -1,4 +1,7 @@
-BATCH_SIZE = 4
-LEARNING_RATE = 0.001
-NUM_EPOCHS = 2
+BATCH_SIZE = 16
+LEARNING_RATE = 0.01
+NUM_EPOCHS = 4
+
+classes = ('plane', 'car', 'bird', 'cat',
+               'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 

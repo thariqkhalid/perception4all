@@ -15,6 +15,9 @@ import torch.optim as optim
 
 # This is Afnan's first neural network from scratch :-)
 
+
+# This is Afnan's first neural network from scratch :-)
+
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
@@ -33,8 +36,3 @@ class Net(nn.Module):
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
         return x
-
-    def loss(self):
-        criterion = nn.CrossEntropyLoss()
-        optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
-        return criterion, optimizer
