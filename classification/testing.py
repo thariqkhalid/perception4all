@@ -9,10 +9,14 @@ __status__ = "Research and Development"
 
 """
 
-from networks import CNN
-import torch
+#local imports
+from networks import vanilla_cnn
 import data_loader
+from config import classes
+# library imports
+import torch
 from torch.utils.tensorboard import SummaryWriter
+import torch.nn.functional as F # I have to ask why Mentor Thariq didn't import this F
 
 def testing():
 

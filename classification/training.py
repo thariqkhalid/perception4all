@@ -9,15 +9,17 @@ __status__ = "Research and Development"
 
 """
 
-# library imports
 import torch
 from torch.utils.tensorboard import SummaryWriter
 from argparse import ArgumentParser
 import matplotlib.pyplot as plt
+import torch.nn as nn
+import torch.optim as optim
 
 # local imports
 import data_loader
-from networks import CNN
+from networks import vanilla_cnn
+from config import *
 
 
 # Tensorflow is static graph programming & PyTorch is Dynamic graph programming

@@ -8,10 +8,12 @@ __email__ = "thariq.khalid@gmail.com"
 __status__ = "Research and Development"
 
 """
-
+#imports
 import torch
 import torchvision
 import torchvision.transforms as transforms
+#local import
+from config import BATCH_SIZE
 
 def datasetL():
     transform = transforms.Compose(

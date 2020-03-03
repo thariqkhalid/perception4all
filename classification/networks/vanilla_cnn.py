@@ -11,10 +11,6 @@ __status__ = "Research and Development"
 
 import torch.nn as nn
 import torch.nn.functional as F
-import torch.optim as optim
-
-# This is Afnan's first neural network from scratch :-)
-
 
 # This is Afnan's first neural network from scratch :-)
 
