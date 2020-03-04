@@ -25,61 +25,60 @@ from config import *
 # Tensorflow is static graph programming & PyTorch is Dynamic graph programming
 
 def train(trainloader, valloader, experiment_name):
-    writer_train = SummaryWriter('experiments/runs/{}/train'.format(experiment_name))
-    writer_val = SummaryWriter('experiments/runs/{}/val'.format(experiment_name))
+    writertrain=SummaryWriter('experiments/runs/train')
+    writerval=SummaryWriter('experiments/runs/val')
+
 
     for epoch in range(NUM_EPOCHS):  # loop over the dataset multiple times
-        training_loss=0.0
+        running_loss=0.0
         val_loss=0.0
-
-        # We will first run the train set iteration
         for i, data in enumerate(trainloader, 0):
             # get the inputs; data is a list of [inputs, labels]
 
             inputs, labels=data  # 4, 8, 16, 32
 
             # zero the parameter gradients
-            '''forward + backward + optimize
-                refer to https://blog.paperspace.com/pytorch-101-understanding-graphs-and-automatic-differentiation/ '''
             optimizer.zero_grad( )  # initialize all the gradients inside the network to 0
+
+            # forward + backward + optimize
             outputs=net(inputs)
             loss=criterion(outputs, labels)  # error value
-            loss.backward()
-            optimizer.step()
-            writer_train.add_graph(net, inputs)  # visualize model structure by using tensorboard
+            loss.backward( )
+            optimizer.step( )
+            writertrain.add_graph(net, inputs)  # visualize model structure by using tensorboard
 
             # print statistics
-            training_loss+=loss.item()
+            running_loss+=loss.item( )
 
             if i % 2000 == 1999:  # print every 2000 mini-batches
                 # ...log the running loss
-                writer_train.add_scalar('Loss',training_loss / len(trainloader),epoch * len(trainloader) + i)  # Card 2
-                print('[%d, %5d] training loss: %.3f' %(epoch + 1, i + 1, training_loss / len(trainloader)))
-                training_loss = 0.0
+                writertrain.add_scalar('training loss',running_loss / len(trainloader),epoch * len(trainloader) + i)  # Card 2
 
-        # Now we will run the validation set at the end of every epoch
-        for j, val_data in enumerate(valloader, 0):
-            with torch.no_grad():
-                # get the inputs; data is a list of [inputs, labels]
-                inputs_val, labels_val = val_data  # 4, 8, 16, 32
+                print('[%d, %5d] loss: %.3f' %(epoch + 1, i + 1, running_loss / len(valloader)))
+                running_loss=0.0
+        else:
+            with torch.no_grad( ):
+                for j, valdata in enumerate(valloader, 0):
+                    # get the inputs; data is a list of [inputs, labels]
+                    inputsval, labelsval=valdata  # 4, 8, 16, 32
 
-                # forward
-                outputs_val = net(inputs_val)
-                loss_val = criterion(outputs_val, labels_val)  # error value
+                    # forward
+                    outputsval = net(inputsval)
+                    lossval = criterion(outputsval, labelsval)  # error value
 
-                # print statistics
-                val_loss += loss_val.item()
+                    # print statistics
+                    val_loss += lossval.item()
 
-                if j % 2000 == 1999:
-                    writer_val.add_scalar('Loss', val_loss / len(valloader), epoch * len(valloader) + j)  # Card 2
-                    print('[%d, %5d] validation loss: %.3f' % (epoch + 1, j + 1, val_loss / len(valloader)))
-                    val_loss = 0.0
-
+                    if j % 100 == 99:  # print every 2000 mini-batches
+                        # ...log the running loss
+                        writerval.add_scalar('validation loss', val_loss / len(valloader), epoch * len(valloader) + j)  # Card 2
+                        print('[%d, %5d] validation loss: %.3f' % (epoch + 1, j + 1, val_loss / len(valloader)))
+                        val_loss = 0.0
 
 
     print("finished training phase")
-    writer_train.close()
-    writer_val.close()
+    writer.close()
+
 
 # learning rate decay means start with 10e-6 and go to 10-3
 

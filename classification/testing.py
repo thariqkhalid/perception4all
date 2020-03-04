@@ -16,7 +16,7 @@ from config import classes
 # library imports
 import torch
 from torch.utils.tensorboard import SummaryWriter
-import torch.nn.functional as F # I have to ask why Mentor Thariq didn't import this F
+import torch.nn.functional as F
 
 def testing():
 
@@ -48,8 +48,7 @@ def testing():
             class_probs.append(class_probs_batch) # 16022019
             class_preds.append(class_preds_batch) # 16022019
 
-    print('Accuracy of the network on the 10000 test images: %d %%' % (
-    100 * correct / total))
+    print('Accuracy of the network on the 10000 test images: %d %%' % (100 * correct / total))
 
     test_probs = torch.cat([torch.stack(batch) for batch in class_probs]) # 16022019
     test_preds = torch.cat(class_preds) # 16022019
