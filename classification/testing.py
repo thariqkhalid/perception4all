@@ -20,9 +20,8 @@ import torch.nn.functional as F
 
 def testing():
 
-    _,testloader= data_loader.datasetL()
     net = vanilla_cnn.Net()
-    _,testloader = data_loader.datasetL()
+    _, testloader, _ = data_loader.datasetL()
     # print images
     net.load_state_dict(torch.load('experiments/models/cifar_net.pth'))
     correct = 0
