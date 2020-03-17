@@ -8,6 +8,9 @@ __email__ = "thariq.khalid@gmail.com"
 __status__ = "Research and Development"
 
 """
+import os
+
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 import torch
 import torchvision
@@ -49,10 +52,9 @@ net.conv1.register_forward_hook(get_activation('conv1'))
 _,testloader,_ = data_loader.datasetL()
 it = iter(testloader)
 data, _ = next(it)
-data.unsqueeze(0)
 output = net(data)
 
-act = activation['conv1'].squeeze()
+act = activation['conv1']
 fig, axarr = plt.subplots(act.size(0))
 for idx in range(act.size(0)):
     axarr[idx].imshow(act[idx])
