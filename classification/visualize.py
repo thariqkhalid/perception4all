@@ -19,6 +19,7 @@ import matplotlib.pyplot as plt
 
 from networks import vanilla_cnn
 import data_loader
+from config import *
 
 debug = False
 
@@ -51,13 +52,18 @@ net.conv1.register_forward_hook(get_activation('conv1'))
 
 _,testloader,_ = data_loader.datasetL()
 it = iter(testloader)
-data, _ = next(it)
+data, labels = next(it)
 output = net(data)
 
 act = activation['conv1']
-fig, axarr = plt.subplots(act.size(0))
-for idx in range(act.size(0)):
-    axarr[idx].imshow(act[idx])
+fig, axis = plt.subplots(act.size(1), act.size(0))
+
+for b in range(act.size(0)):
+    axis[0,b].set_title(classes[labels[b].numpy()])
+    for idx in range(act.size(1)):
+        axis[idx, b].imshow(act[b][idx])
+
+plt.show()
 
 
 # Next step is to study the code from https://www.kaggle.com/sironghuang/understanding-pytorch-hooks
