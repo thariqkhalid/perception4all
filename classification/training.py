@@ -62,10 +62,10 @@ def train(trainloader, valloader, experiment_name):
             with torch.no_grad():
                 # get the inputs; data is a list of [inputs, labels]
                 inputs_val, labels_val = val_data  # 4, 8, 16, 32
-
                 # forward
                 outputs_val = net(inputs_val)
                 loss_val = criterion(outputs_val, labels_val)  # error value
+                scheduler.step(loss_val)
 
                 # print statistics
                 val_loss += loss_val.item()
@@ -87,6 +87,11 @@ def loss(net):
     criterion=nn.CrossEntropyLoss( )  # choice of your cost function, because you are doing multi class classification, CEL
     optimizer=optim.SGD(net.parameters( ), lr=LEARNING_RATE, momentum=0.9)  # Adam, mAdagradSy with the optimizer
     return criterion, optimizer
+def LRdecay(optimizer):
+    scheduler=optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=2, verbose=False,)
+    return scheduler
+
+
 
 
 if __name__ == '__main__':
@@ -97,10 +102,11 @@ if __name__ == '__main__':
     args=parser.parse_args( )
     experiment_name=args.exp_name
 
-    trainloader, _, valloader=data_loader.datasetL( )
-    net=vanilla_cnn.Net( )
+    trainloader, _, valloader=data_loader.datasetL()
+    net=vanilla_cnn.Net()
 
     criterion, optimizer=loss(net)
+    scheduler=LRdecay(optimizer)
     train(trainloader, valloader, experiment_name)
 
     PATH='experiments/models/cifar_net.pth'  # Card 3
