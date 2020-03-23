@@ -85,12 +85,11 @@ def train(trainloader, valloader, experiment_name):
 
 def loss(net):
     criterion=nn.CrossEntropyLoss( )  # choice of your cost function, because you are doing multi class classification, CEL
-    optimizer=optim.SGD(net.parameters( ), lr=LEARNING_RATE, momentum=0.9)  # Adam, mAdagradSy with the optimizer
+    optimizer=optim.SGD(net.parameters( ), lr=LEARNING_RATE, momentum=0.9,weight_decay=5*(10)^4) # Adam, mAdagradSy with the optimizer
     return criterion, optimizer
 def LRdecay(optimizer):
-    scheduler=optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=2, verbose=False,)
+    scheduler=optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=10, patience=10, verbose=False,)
     return scheduler
-
 
 
 
@@ -99,7 +98,7 @@ if __name__ == '__main__':
     parser=ArgumentParser(description="Arguments for training the neural network according to the code design")
     parser.add_argument("--exp_name", type=str, help="the experiment name")
 
-    args=parser.parse_args( )
+    args=parser.parse_args()
     experiment_name=args.exp_name
 
     trainloader, _, valloader=data_loader.datasetL()
