@@ -18,8 +18,9 @@ import torch.optim as optim
 
 # local imports
 import data_loader
-from networks import vanilla_cnn
+from networks import vanilla_cnn, VGG
 from config import *
+import cv2
 
 
 # Tensorflow is static graph programming & PyTorch is Dynamic graph programming
@@ -37,6 +38,7 @@ def train(trainloader, valloader, experiment_name):
             # get the inputs; data is a list of [inputs, labels]
 
             inputs, labels=data  # 4, 8, 16, 32
+
 
             # zero the parameter gradients
             '''forward + backward + optimize
@@ -88,7 +90,7 @@ def loss(net):
     optimizer=optim.SGD(net.parameters( ), lr=LEARNING_RATE, momentum=0.9,weight_decay=5*(10)^4) # Adam, mAdagradSy with the optimizer
     return criterion, optimizer
 def LRdecay(optimizer):
-    scheduler=optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=10, patience=10, verbose=False,)
+    scheduler=optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.10, patience=10, verbose=False,)
     return scheduler
 
 
@@ -102,11 +104,12 @@ if __name__ == '__main__':
     experiment_name=args.exp_name
 
     trainloader, _, valloader=data_loader.datasetL()
-    net=vanilla_cnn.Net()
+    #net=vanilla_cnn.Net()
+    net=VGG.Net()
 
     criterion, optimizer=loss(net)
     scheduler=LRdecay(optimizer)
     train(trainloader, valloader, experiment_name)
 
-    PATH='experiments/models/cifar_net.pth'  # Card 3
+    PATH='experiments/models/VGG/A-architecture.pth'  # Card 3
     torch.save(net.state_dict( ), PATH)

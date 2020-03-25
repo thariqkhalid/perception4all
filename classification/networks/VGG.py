@@ -23,18 +23,16 @@ Important notes, should be highlighted!
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1=nn.Conv2d(in_channels=64,out_channels=128,kernel_size=(3,3),stride=(2,2), padding=(1,1))
+        self.conv1=nn.Conv2d(in_channels=3,out_channels=64,kernel_size=(3,3),stride=(2,2), padding=(1,1))
+        self.conv2=nn.Conv2d(in_channels=64,out_channels=128,kernel_size=(3,3),stride=(2,2), padding=(1,1))
         self.pool=nn.MaxPool2d(kernel_size=(2,2), stride=(2,2))
-        self.conv2=nn.Conv2d(in_channels=128, out_channels=256,kernel_size=(3,3),stride=(2,2), padding=(1,1))
-        self.conv3=nn.Conv2d(in_channels=256, out_channels=256, kernel_size=(3,3),stride=(2,2), padding=(1,1))
-        self.conv4=nn.Conv2d(in_channels=256, out_channels=512, kernel_size=(3,3),stride=(2,2), padding=(1,1))
-        self.conv5=nn.Conv2d(in_channels=512, out_channels=512,kernel_size=(3,3),stride=(2,2), padding=(1,1))
-        self.conv6=nn.Conv2d(in_channels=512, out_channels=512, kernel_size=(3,3),stride=(2,2), padding=(1,1))
-        self.conv7=nn.Conv2d(in_channels=512, out_channels=512, kernel_size=(3,3),stride=(2,2), padding=(1,1))
-        self.conv8=nn.Conv2d(in_channels=512, out_channels=512, kernel_size=(3,3),stride=(2,2), padding=(1,1))
-        self.fc6=nn.Linear(in_features=512 * 3 * 3,out_features=4096)
-        self.fc7=nn.Linear(in_features=4096,out_features=4096)
-        self.fc8=nn.Linear(in_features=4096,out_features=10)
+        self.conv3=nn.Conv2d(in_channels=128, out_channels=256,kernel_size=(3,3),stride=(2,2), padding=(1,1))
+        self.conv4=nn.Conv2d(in_channels=256, out_channels=256, kernel_size=(3,3),stride=(2,2), padding=(1,1))
+        self.conv5=nn.Conv2d(in_channels=256, out_channels=512, kernel_size=(3,3),stride=(2,2), padding=(1,1))
+        self.conv6=nn.Conv2d(in_channels=512, out_channels=512,kernel_size=(3,3),stride=(2,2), padding=(1,1))
+        self.fc1=nn.Linear(in_features=512 * 3 * 3,out_features=4096)
+        self.fc2=nn.Linear(in_features=4096,out_features=4096)
+        self.fc3=nn.Linear(in_features=4096,out_features=10)
         self.dropout=nn.Dropout(0.5)
 
     def forward(self, x):
@@ -44,11 +42,12 @@ class Net(nn.Module):
         x=self.pool(F.relu(self.conv4(x)))
         x=F.relu(self.conv5(x))
         x=self.pool(F.relu(self.conv6(x)))
-        x=F.relu(self.conv7(x))
-        x=self.pool(F.relu(self.conv8(x)))
-        x=F.relu(self.dropout(self.fc6(x)))
-        x=F.relu(self.fc7(x))
-        x=F.self.fc8(x)
+        x=F.relu(self.conv6(x))
+        x=self.pool(F.relu(self.conv6(x)))
+        x=x.view(-1, 512 * 3 * 3)
+        x=F.relu(self.dropout(self.fc1(x)))
+        x=F.relu(self.fc2(x))
+        x=F.self.fc3(x)
         return x
 
 
