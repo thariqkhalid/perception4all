@@ -31,7 +31,7 @@ class VggNet(nn.Module):
         self.conv4 = nn.Conv2d(256, 256, 3)
         self.conv5 = nn.Conv2d(256, 512, 3)
         self.conv6 = nn.Conv2d(512, 512, 3)
-        self.fc1 = nn.Linear(512 * 6 * 6, 4096)
+        self.fc1 = nn.Linear(512 * 3 * 3, 4096)
         self.fc2 = nn.Linear(4096, 4096)
         self.fc3 = nn.Linear(4096, 10)
 
