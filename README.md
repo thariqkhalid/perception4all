@@ -1,4 +1,4 @@
 # perception4all
 This repo aims at implementing and explaining the neural networks in detail
 
-![](classification/images/cm.png)
+<img src="classification/images/cm.png" width="500" height="500">
