@@ -13,15 +13,20 @@ inception_4e = [528, 256, 160, 320, 32, 128, 128]
 inception_5a = [832, 256, 160, 320, 32, 128, 128]
 inception_5b = [832, 384, 192, 384, 48, 128, 128]
 
+#Aux blocks
+inception_4b_aux = [512,512]
+inception_4e_aux = [528,832]
+
+
 class inception_module():
     def __init__(self, inception_block):
-        self.conv1 = nn.Conv2d(inception_block[0], inception_block[1], 1)
-        self.conv3_r = nn.Conv2d(inception_block[0], inception_block[2], 1)
-        self.conv3 = nn.Conv2d(inception_block[2], inception_block[3], 3)
-        self.conv5_r = nn.Conv2d(inception_block[0], inception_block[4], 1)
-        self.conv5 = nn.Conv2d(inception_block[4], inception_block[5], 5)
-        self.pool = nn.MaxPool2d(3,3)
-        self.conv1_m = nn.Conv2d(inception_block[5], inception_block[5], 1)
+        self.conv1 = nn.Conv2d(in_channels=inception_block[0], out_channels=inception_block[1], kernel_size=(1,1), stride=(1,1))
+        self.conv3_r = nn.Conv2d(in_channels=inception_block[0], out_channels=inception_block[2], kernel_size=(1,1), stride=(1,1))
+        self.conv3 = nn.Conv2d(in_channels=inception_block[2],out_channels= inception_block[3], kernel_size=(3,3),stride=(1,1))
+        self.conv5_r = nn.Conv2d(in_channels=inception_block[0], out_channels=inception_block[4],kernel_size=(1,1), stride=(1,1))
+        self.conv5 = nn.Conv2d(in_channels=inception_block[4], out_channels=inception_block[5],kernel_size=(5,5), stride=(1,1))
+        self.pool = nn.MaxPool2d(kernel_size=(3,3), stride=(1,1))
+        self.conv1_m = nn.Conv2d(in_channels=inception_block[5], out_channels=inception_block[5], kernel_size=(1,1), stride=(1,1))
 
     def forward(self, x):
         x1 = self.conv1(x)
@@ -30,3 +35,93 @@ class inception_module():
         x4 = F.relu(self.conv1_m(self.pool(x)))
         x_final = torch.cat(x1, x2, x3, x4)
         return x_final
+
+"""
+• An average pooling layer with 5×5 filter size and stride 3, resulting in an 4×4×512 output
+for the (4a), and 4×4×528 for the (4d) stage.
+• A 1×1 convolution with 128 filters for dimension reduction and rectified linear activation. # I didn't understand why they say 128 filters while it's 1 1x1 conv 
+• A fully connected layer with 1024 units and rectified linear activation.  
+• A dropout layer with 70% ratio of dropped outputs.
+• A linear layer with softmax loss as the classifier (predicting the same 1000 classes as the main classifier, but removed at inference time).
+"""
+class inceptionAux_module():
+    def __init__ ( self , inceptionAux_block ) :
+        self.conv = nn.Conv2d(in_channels=inceptionAux_block[0],out_channels=inceptionAux_block[1], kernel_size=(1,1), stride=(1,1))
+        self.avgPool = nn.AvgPool2d(kernel_size=(5,5), stride=(3,3))
+        self.fc1 = nn.Linear(in_features=inceptionAux_block[1] * 1 * 1, out_features=1024)
+        self.fc2 = nn.Linear(in_features=1024, out_features=10)
+        self.dropout = nn.Dropout(0.70)
+
+    def forward( self, x):
+        x = F.relu(self.conv(self.avgPool(x)))
+        x = x.view(-1,inceptionAux_block[1] * 1 * 1)
+        x = self.dropout(F.relu(self.fc1(x)))
+        x = F.softmax(self.fc2(x))
+        return x
+
+
+class InceptionNet(nn.Module):
+    def __init__ ( self ) :
+        super(InceptionNet, self).__init__( )
+        self.conv1 = nn.Conv2d(in_channels=3, out_channels=64, kernel_size=(7,7), stride=(2,2), padding=(3,3))
+        self.pool  = nn.MaxPool2d(kernel_size=(3,3),stride=(2,2))
+        self.conv2 = nn.Conv2d(in_channels=64, out_channels=192, kernel_size=(3,3), stride=(1,1), padding=(1,1))
+        self.avgPool = nn.AvgPool2d(kernel_size=(7,7), stride=(2,2))
+        self.dropout = nn.Dropout(0.40)
+        # as the original work they put out_features = 1000 because of the dataset that is used, but for us the dataset that we will use has 10 class
+        self.fc = nn.Linear(in_features=1024 * 7 * 7, out_features=10)
+
+    def forward (self, x):
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+
+        module_3a = inception_module(inception_3a)
+        x = module_3a(x)
+        module_3b = inception_module(inception_3b)
+        x = module_3b(x)
+        x = self.pool(x)
+
+        module_4a = inception_module(inception_4a)
+        x = module_4a(x)
+
+        x1 = x
+        module_4b = inception_module(inception_4b)
+        module_4b_aux = inceptionAux_module(inception_4b_aux)
+        x = module_4b(x)
+        x1 = module_4b_aux(x1)
+
+        module_4c = inception_module(inception_4c)
+        x = module_4c(x)
+        module_4d = inception_module(inception_4d)
+        x = module_4d(x)
+
+        x2 = x
+        module_4e = inception_module(inception_4e)
+        module_4e_aux = inceptionAux_module(inception_4e_aux)
+        x = module_4e(x)
+        x2 = module_4e_aux(x2)
+
+        x = self.pool(x)
+
+        module_5a = inception_module(inception_5a)
+        x = module_5a(x)
+        module_5b = inception_module(inception_5b)
+        x = module_5b(x)
+
+        x = self.avgPool(x)
+        x = self.dropout(x)
+        x = x.view(-1, 1024 * 7 * 7 )
+        x = F.softmax(self.fc(x))
+
+        return x,x1,x2
+
+
+
+
+
+
+
+
+
+
+
