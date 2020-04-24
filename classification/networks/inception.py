@@ -18,22 +18,28 @@ inception_4b_aux = [512,512]
 inception_4e_aux = [528,832]
 
 
-class inception_module():
+class inception_module(nn.Module):
     def __init__(self, inception_block):
+        super(inception_module , self).__init__( )
         self.conv1 = nn.Conv2d(in_channels=inception_block[0], out_channels=inception_block[1], kernel_size=(1,1), stride=(1,1))
-        self.conv3_r = nn.Conv2d(in_channels=inception_block[0], out_channels=inception_block[2], kernel_size=(1,1), stride=(1,1))
+        self.conv3_r = nn.Conv2d(in_channels=inception_block[0], out_channels=inception_block[2], kernel_size=(1,1), stride=(1,1),padding=(1,1))
         self.conv3 = nn.Conv2d(in_channels=inception_block[2],out_channels= inception_block[3], kernel_size=(3,3),stride=(1,1))
-        self.conv5_r = nn.Conv2d(in_channels=inception_block[0], out_channels=inception_block[4],kernel_size=(1,1), stride=(1,1))
-        self.conv5 = nn.Conv2d(in_channels=inception_block[4], out_channels=inception_block[5],kernel_size=(5,5), stride=(1,1))
-        self.pool = nn.MaxPool2d(kernel_size=(3,3), stride=(1,1))
-        self.conv1_m = nn.Conv2d(in_channels=inception_block[5], out_channels=inception_block[5], kernel_size=(1,1), stride=(1,1))
+        self.conv5_r = nn.Conv2d(in_channels=inception_block[0], out_channels=inception_block[4],kernel_size=(1,1), stride=(1,1),padding=(1,1))
+        self.conv5 = nn.Conv2d(in_channels=inception_block[4], out_channels=inception_block[5],kernel_size=(5,5), stride=(1,1),padding=(1,1))
+        self.pool = nn.MaxPool2d(kernel_size=(3,3), stride=(1,1),ceil_mode=True)
+        self.conv1_m = nn.Conv2d(in_channels=inception_block[0], out_channels=inception_block[6], kernel_size=(1,1), stride=(1,1),padding=(1,1))
 
     def forward(self, x):
-        x1 = self.conv1(x)
+        x1 = F.relu(self.conv1(x))
+        print(x1.shape)
         x2 = F.relu(self.conv3(F.relu(self.conv3_r(x))))
+        print(x2.shape)
         x3 = F.relu(self.conv5(F.relu(self.conv5_r(x))))
+        print(x3.shape)
         x4 = F.relu(self.conv1_m(self.pool(x)))
-        x_final = torch.cat(x1, x2, x3, x4)
+        print(x4.shape)
+        x_final = torch.cat((x1, x2, x3, x4),dim=2)
+        print(x_final)
         return x_final
 
 """
@@ -44,8 +50,9 @@ for the (4a), and 4×4×528 for the (4d) stage.
 • A dropout layer with 70% ratio of dropped outputs.
 • A linear layer with softmax loss as the classifier (predicting the same 1000 classes as the main classifier, but removed at inference time).
 """
-class inceptionAux_module():
+class inceptionAux_module(nn.Module):
     def __init__ ( self , inceptionAux_block ) :
+        super(inceptionAux_module , self).__init__( )
         self.conv = nn.Conv2d(in_channels=inceptionAux_block[0],out_channels=inceptionAux_block[1], kernel_size=(1,1), stride=(1,1))
         self.avgPool = nn.AvgPool2d(kernel_size=(5,5), stride=(3,3))
         self.fc1 = nn.Linear(in_features=inceptionAux_block[1] * 1 * 1, out_features=1024)
@@ -64,8 +71,20 @@ class InceptionNet(nn.Module):
     def __init__ ( self ) :
         super(InceptionNet, self).__init__( )
         self.conv1 = nn.Conv2d(in_channels=3, out_channels=64, kernel_size=(7,7), stride=(2,2), padding=(3,3))
-        self.pool  = nn.MaxPool2d(kernel_size=(3,3),stride=(2,2))
-        self.conv2 = nn.Conv2d(in_channels=64, out_channels=192, kernel_size=(3,3), stride=(1,1), padding=(1,1))
+        self.pool  = nn.MaxPool2d(kernel_size=(3,3),stride=(2,2), ceil_mode=True)
+        self.conv2 = nn.Conv2d(in_channels=64 , out_channels=64, kernel_size=(1,1),stride=(1,1)) # padding = 0
+        self.conv3 = nn.Conv2d(in_channels=64, out_channels=192, kernel_size=(3,3), stride=(1,1), padding=(1,1))
+        self.module_3a = inception_module(inception_3a)
+        self.module_3b = inception_module(inception_3b)
+        self.module_4a = inception_module(inception_4a)
+        self.module_4b = inception_module(inception_4b)
+        self.module_4b_aux = inceptionAux_module(inception_4b_aux)
+        self.module_4c = inception_module(inception_4c)
+        self.module_4d=inception_module(inception_4d)
+        self.module_4e=inception_module(inception_4e)
+        self.module_4e_aux=inceptionAux_module(inception_4e_aux)
+        self.module_5a = inception_module(inception_5a)
+        self.module_5b = inception_module(inception_5b)
         self.avgPool = nn.AvgPool2d(kernel_size=(7,7), stride=(2,2))
         self.dropout = nn.Dropout(0.40)
         # as the original work they put out_features = 1000 because of the dataset that is used, but for us the dataset that we will use has 10 class
@@ -73,40 +92,23 @@ class InceptionNet(nn.Module):
 
     def forward (self, x):
         x = self.pool(F.relu(self.conv1(x)))
-        x = self.pool(F.relu(self.conv2(x)))
-
-        module_3a = inception_module(inception_3a)
-        x = module_3a(x)
-        module_3b = inception_module(inception_3b)
-        x = module_3b(x)
+        #x = self.LRN(x)
+        x = self.pool(F.relu(self.conv3(F.relu(self.conv2(x)))))
+        x = self.module_3a(x)
+        x = self.module_3b(x)
         x = self.pool(x)
-
-        module_4a = inception_module(inception_4a)
-        x = module_4a(x)
-
+        x = self.module_4a(x)
         x1 = x
-        module_4b = inception_module(inception_4b)
-        module_4b_aux = inceptionAux_module(inception_4b_aux)
-        x = module_4b(x)
-        x1 = module_4b_aux(x1)
-
-        module_4c = inception_module(inception_4c)
-        x = module_4c(x)
-        module_4d = inception_module(inception_4d)
-        x = module_4d(x)
-
+        x = self.module_4b(x)
+        x1 = self.module_4b_aux(x1)
+        x = self.module_4c(x)
+        x = self.module_4d(x)
         x2 = x
-        module_4e = inception_module(inception_4e)
-        module_4e_aux = inceptionAux_module(inception_4e_aux)
-        x = module_4e(x)
-        x2 = module_4e_aux(x2)
-
+        x = self.module_4e(x)
+        x2 = self.module_4e_aux(x2)
         x = self.pool(x)
-
-        module_5a = inception_module(inception_5a)
-        x = module_5a(x)
-        module_5b = inception_module(inception_5b)
-        x = module_5b(x)
+        x = self.module_5a(x)
+        x = self.module_5b(x)
 
         x = self.avgPool(x)
         x = self.dropout(x)
