@@ -31,15 +31,10 @@ class inception_module(nn.Module):
 
     def forward(self, x):
         x1 = F.relu(self.conv1(x))
-        print(x1.shape)
         x2 = F.relu(self.conv3(F.relu(self.conv3_r(x))))
-        print(x2.shape)
         x3 = F.relu(self.conv5(F.relu(self.conv5_r(x))))
-        print(x3.shape)
         x4 = F.relu(self.conv1_m(self.pool(x)))
-        print(x4.shape)
-        x_final = torch.cat((x1, x2, x3, x4),dim=2)
-        print(x_final)
+        x_final = torch.cat((x1, x2, x3, x4),dim=1)
         return x_final
 
 """
@@ -54,16 +49,18 @@ class inceptionAux_module(nn.Module):
     def __init__ ( self , inceptionAux_block ) :
         super(inceptionAux_module , self).__init__( )
         self.conv = nn.Conv2d(in_channels=inceptionAux_block[0],out_channels=inceptionAux_block[1], kernel_size=(1,1), stride=(1,1))
-        self.avgPool = nn.AvgPool2d(kernel_size=(5,5), stride=(3,3))
-        self.fc1 = nn.Linear(in_features=inceptionAux_block[1] * 1 * 1, out_features=1024)
-        self.fc2 = nn.Linear(in_features=1024, out_features=10)
+        self.out_channels = inceptionAux_block[1]
+        self.avgPool = nn.AvgPool2d(kernel_size = (5,5), stride= (3,3), ceil_mode=True)
+        self.fc1 = nn.Linear(in_features = inceptionAux_block[1] , out_features=1024)
+        self.fc2 = nn.Linear(in_features = 1024, out_features=10)
         self.dropout = nn.Dropout(0.70)
 
     def forward( self, x):
-        x = F.relu(self.conv(self.avgPool(x)))
-        x = x.view(-1,inceptionAux_block[1] * 1 * 1)
+        x = self.avgPool(x)
+        x = F.relu(self.conv(x))
+        x = x.view(-1, self.out_channels )
         x = self.dropout(F.relu(self.fc1(x)))
-        x = F.softmax(self.fc2(x))
+        x = F.softmax(self.fc2(x), dim=0)
         return x
 
 
@@ -85,14 +82,13 @@ class InceptionNet(nn.Module):
         self.module_4e_aux=inceptionAux_module(inception_4e_aux)
         self.module_5a = inception_module(inception_5a)
         self.module_5b = inception_module(inception_5b)
-        self.avgPool = nn.AvgPool2d(kernel_size=(7,7), stride=(2,2))
+        self.avgPool = nn.AvgPool2d(kernel_size=(7,7), stride=(2,2), ceil_mode=True)
         self.dropout = nn.Dropout(0.40)
         # as the original work they put out_features = 1000 because of the dataset that is used, but for us the dataset that we will use has 10 class
-        self.fc = nn.Linear(in_features=1024 * 7 * 7, out_features=10)
+        self.fc = nn.Linear(in_features = 1024 * 1 * 1, out_features= 10)
 
     def forward (self, x):
         x = self.pool(F.relu(self.conv1(x)))
-        #x = self.LRN(x)
         x = self.pool(F.relu(self.conv3(F.relu(self.conv2(x)))))
         x = self.module_3a(x)
         x = self.module_3b(x)
@@ -104,17 +100,18 @@ class InceptionNet(nn.Module):
         x = self.module_4c(x)
         x = self.module_4d(x)
         x2 = x
+        print(x2.shape)
         x = self.module_4e(x)
+        print(x.shape)
         x2 = self.module_4e_aux(x2)
+        print(x2.shape)
         x = self.pool(x)
         x = self.module_5a(x)
         x = self.module_5b(x)
-
         x = self.avgPool(x)
         x = self.dropout(x)
-        x = x.view(-1, 1024 * 7 * 7 )
-        x = F.softmax(self.fc(x))
-
+        x = x.view(x.size(0), -1)
+        x = F.softmax(self.fc(x), dim=0)
         return x,x1,x2
 
 

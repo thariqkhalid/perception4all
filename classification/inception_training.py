@@ -43,9 +43,9 @@ def train(trainloader, valloader, experiment_name):
             '''forward + backward + optimize
                 refer to https://blog.paperspace.com/pytorch-101-understanding-graphs-and-automatic-differentiation/ '''
             optimizer.zero_grad( )  # initialize all the gradients inside the network to 0
-            outputs,aux1_outpouts, aux2_outputs=net(inputs) # get three outputs from the network
+            outputs,aux1_outputs, aux2_outputs=net(inputs) # get three outputs from the network
             loss1 = criterion(outputs, labels)  # error value
-            loss2 = criterion(aux1_outpouts,labels)
+            loss2 = criterion(aux1_outputs,labels)
             loss3 = criterion(aux2_outputs, labels)
             loss  = loss1 + 0.3*(loss2+loss3)
             loss.backward()
@@ -81,9 +81,6 @@ def train(trainloader, valloader, experiment_name):
                     writer_val.add_scalar('Loss', val_loss / len(valloader), epoch * len(valloader) + j)  # Card 2
                     print('[%d, %5d] validation loss: %.3f' % (epoch + 1, j + 1, val_loss / len(valloader)))
                     val_loss = 0.0
-
-
-
     print("finished training phase")
     writer_train.close()
     writer_val.close()
