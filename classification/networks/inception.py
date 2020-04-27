@@ -49,16 +49,16 @@ class inceptionAux_module(nn.Module):
     def __init__ ( self , inceptionAux_block ) :
         super(inceptionAux_module , self).__init__( )
         self.conv = nn.Conv2d(in_channels=inceptionAux_block[0],out_channels=inceptionAux_block[1], kernel_size=(1,1), stride=(1,1))
-        self.out_channels = inceptionAux_block[1]
+        self.out_channels = inceptionAux_block[1]*4*4
         self.avgPool = nn.AvgPool2d(kernel_size = (5,5), stride= (3,3), ceil_mode=True)
-        self.fc1 = nn.Linear(in_features = inceptionAux_block[1] , out_features=1024)
+        self.fc1 = nn.Linear(in_features = inceptionAux_block[1]*4*4 , out_features=1024)
         self.fc2 = nn.Linear(in_features = 1024, out_features=10)
         self.dropout = nn.Dropout(0.70)
 
     def forward( self, x):
         x = self.avgPool(x)
         x = F.relu(self.conv(x))
-        x = x.view(-1, self.out_channels )
+        x = x.view(-1, self.out_channels)
         x = self.dropout(F.relu(self.fc1(x)))
         x = F.softmax(self.fc2(x), dim=0)
         return x
