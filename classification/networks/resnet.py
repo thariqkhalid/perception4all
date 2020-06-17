@@ -21,7 +21,7 @@ conv4_x = [512,256,256,1024]
 conv4_x_identity = [1024,256,256,1024]
 conv5_x = [1024,512,512,2048]
 conv5_x_identity = [2048,512,512,2048]
-s = 2
+
 
 
 class identityblock_module(nn.Module):
