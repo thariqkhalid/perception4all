@@ -13,13 +13,15 @@ import torch.nn.functional as F
 from torch import nn
 import torch
 
-conv2_x = [64,64,64,256]
+# first index stride value, the other for in_channels and out channels of conv blocks
+conv2_x = [1,64,64,64,256]
+conv3_x = [2,256,128,128,512]
+conv4_x = [2, 512,256,256,1024]
+conv5_x = [2, 1024,512,512,2048]
+# values of in_channels and out channels for identity blocks.
 conv2_x_identity = [256,64,64,256]
-conv3_x = [256,128,128,512]
 conv3_x_identity = [512,128,128,512]
-conv4_x = [512,256,256,1024]
 conv4_x_identity = [1024,256,256,1024]
-conv5_x = [1024,512,512,2048]
 conv5_x_identity = [2048,512,512,2048]
 
 
@@ -51,25 +53,25 @@ class identityblock_module(nn.Module):
 
 
 class convblock_module(nn.Module):
-    def __init__ (self,conv_block,s):
+    def __init__ (self,conv_block):
         super(convblock_module,self).__init__()
         # first component of main path
-        self.conv1 = nn.Conv2d(in_channels = conv_block[0],out_channels = conv_block[1],
-                               kernel_size = (1,1),stride = (s,s))
-        self.BN1 = nn.BatchNorm2d(num_features = conv_block[1])
+        self.conv1 = nn.Conv2d(in_channels = conv_block[1],out_channels = conv_block[2],
+                               kernel_size = (1,1),stride = (conv_block[0],conv_block[0]))
+        self.BN1 = nn.BatchNorm2d(num_features = conv_block[2])
         # second component of main path
-        self.conv2 = nn.Conv2d(in_channels = conv_block[1],out_channels = conv_block[2],
+        self.conv2 = nn.Conv2d(in_channels = conv_block[2],out_channels = conv_block[3],
                                kernel_size = (3,3),stride = (1,1),padding = (1,1))
-        self.BN2 = nn.BatchNorm2d(num_features = conv_block[2])
+        self.BN2 = nn.BatchNorm2d(num_features = conv_block[3])
         # third component of main path
-        self.conv3 = nn.Conv2d(in_channels = conv_block[2],out_channels = conv_block[3],
+        self.conv3 = nn.Conv2d(in_channels = conv_block[3],out_channels = conv_block[4],
                                kernel_size = (1,1),stride = (1,1))
-        self.BN3 = nn.BatchNorm2d(num_features = conv_block[3])
+        self.BN3 = nn.BatchNorm2d(num_features = conv_block[4])
 
         # component of shortcut path
-        self.conv3_Shortcut = nn.Conv2d(in_channels = conv_block[0],out_channels = conv_block[3],
-                                        kernel_size = (1,1),stride = (s,s))
-        self.BN_Shortcut = nn.BatchNorm2d(num_features = conv_block[3])
+        self.conv3_Shortcut = nn.Conv2d(in_channels = conv_block[1],out_channels = conv_block[4],
+                                        kernel_size = (1,1),stride = (conv_block[0],conv_block[0]))
+        self.BN_Shortcut = nn.BatchNorm2d(num_features = conv_block[4])
 
     def forward (self,x):
         x_shortcut = x
@@ -92,18 +94,18 @@ class ResNet(nn.Module):
         self.pool = nn.MaxPool2d(kernel_size = (3,3),stride = (2,2),ceil_mode = True)
 
         # second stage
-        self.conv2_1 = convblock_module(conv2_x,1)
+        self.conv2_1 = convblock_module(conv2_x)
         self.conv2_2 = identityblock_module(conv2_x_identity)
         self.conv2_3 = identityblock_module(conv2_x_identity)
 
         # third stage
-        self.conv3_1 = convblock_module(conv3_x,2)
+        self.conv3_1 = convblock_module(conv3_x)
         self.conv3_2 = identityblock_module(conv3_x_identity)
         self.conv3_3 = identityblock_module(conv3_x_identity)
         self.conv3_4 = identityblock_module(conv3_x_identity)
 
         # forth stage
-        self.conv4_1 = convblock_module(conv4_x,2)
+        self.conv4_1 = convblock_module(conv4_x)
         self.conv4_2 = identityblock_module(conv4_x_identity)
         self.conv4_3 = identityblock_module(conv4_x_identity)
         self.conv4_4 = identityblock_module(conv4_x_identity)
@@ -111,7 +113,7 @@ class ResNet(nn.Module):
         self.conv4_6 = identityblock_module(conv4_x_identity)
 
         # fifth stage
-        self.conv5_1 = convblock_module(conv5_x,2)
+        self.conv5_1 = convblock_module(conv5_x)
         self.conv5_2 = identityblock_module(conv5_x_identity)
         self.conv5_3 = identityblock_module(conv5_x_identity)
 

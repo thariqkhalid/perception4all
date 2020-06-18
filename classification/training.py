@@ -18,7 +18,7 @@ import torch.optim as optim
 
 # local imports
 import data_loader
-from networks import vanilla_cnn, VGG
+from networks import vanilla_cnn, VGG, resnet
 from config import *
 import cv2
 
@@ -105,7 +105,8 @@ if __name__ == '__main__':
 
     trainloader, _, valloader=data_loader.datasetL()
     #net=vanilla_cnn.Net()
-    net=VGG.Net()
+    #net=VGG.Net()
+    net = resnet.ResNet()
 
     criterion, optimizer=loss(net)
     scheduler=LRdecay(optimizer)
