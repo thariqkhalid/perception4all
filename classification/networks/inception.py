@@ -40,7 +40,7 @@ class inception_module(nn.Module):
 """
 • An average pooling layer with 5×5 filter size and stride 3, resulting in an 4×4×512 output
 for the (4a), and 4×4×528 for the (4d) stage.
-• A 1×1 convolution with 128 filters for dimension reduction and rectified linear activation. # I didn't understand why they say 128 filters while it's 1 1x1 conv 
+• A 1×1 convolution with 128 filters for dimension reduction and rectified linear activation.
 • A fully connected layer with 1024 units and rectified linear activation.  
 • A dropout layer with 70% ratio of dropped outputs.
 • A linear layer with softmax loss as the classifier (predicting the same 1000 classes as the main classifier, but removed at inference time).
@@ -84,7 +84,7 @@ class InceptionNet(nn.Module):
         self.module_5b = inception_module(inception_5b)
         self.avgPool = nn.AvgPool2d(kernel_size=(7,7), stride=(2,2), ceil_mode=True)
         self.dropout = nn.Dropout(0.40)
-        # as the original work they put out_features = 1000 because of the dataset that is used, but for us the dataset that we will use has 10 class
+
         self.fc = nn.Linear(in_features = 1024 * 1 * 1, out_features= 10)
 
     def forward (self, x):
@@ -100,11 +100,8 @@ class InceptionNet(nn.Module):
         x = self.module_4c(x)
         x = self.module_4d(x)
         x2 = x
-        print(x2.shape)
         x = self.module_4e(x)
-        print(x.shape)
         x2 = self.module_4e_aux(x2)
-        print(x2.shape)
         x = self.pool(x)
         x = self.module_5a(x)
         x = self.module_5b(x)
