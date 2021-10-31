@@ -30,7 +30,8 @@ To run this project, install it locally:
 
 ```
 ## Contact us
-
+* Afnan Qalas - linkedin.com/in/afnanbalghaith
+* Thariq KHalid - https://www.linkedin.com/in/thariqkhalid-deeplearning/
 
 ## Sources
 This project is inspired by https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
