@@ -18,7 +18,7 @@ To run this project, install it locally:
 
 * install all the required libraries [Technologies](#technologies)
 ```
-* run the following command put your values for the arguments.
+* run the following command ...
 
 
 ```
