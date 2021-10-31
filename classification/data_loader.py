@@ -8,7 +8,7 @@ __email__ = "thariq.khalid@gmail.com"
 __status__ = "Research and Development"
 
 """
-#imports
+#torch library
 import torch
 import torchvision
 import torchvision.transforms as transforms
