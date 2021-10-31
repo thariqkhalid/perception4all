@@ -18,7 +18,7 @@ import torch.optim as optim
 
 # local imports
 import data_loader
-from networks import vanilla_cnn, VGG, resnet
+from networks import vanilla_cnn, VGG_new, resnet,inception
 from config import *
 import cv2
 
@@ -26,8 +26,8 @@ import cv2
 # Tensorflow is static graph programming & PyTorch is Dynamic graph programming
 
 def train(trainloader, valloader, experiment_name):
-    writer_train = SummaryWriter('experiments/runs/{}/train'.format(experiment_name))
-    writer_val = SummaryWriter('experiments/runs/{}/val'.format(experiment_name))
+    #writer_train = SummaryWriter('experiments/runs/{}/train'.format(experiment_name))
+    #writer_val = SummaryWriter('experiments/runs/{}/val'.format(experiment_name))
 
     for epoch in range(NUM_EPOCHS):  # loop over the dataset multiple times
         training_loss=0.0
@@ -48,14 +48,14 @@ def train(trainloader, valloader, experiment_name):
             loss=criterion(outputs, labels)  # error value
             loss.backward()
             optimizer.step()
-            writer_train.add_graph(net, inputs)  # visualize model structure by using tensorboard
+            #writer_train.add_graph(net, inputs)  # visualize model structure by using tensorboard
 
             # print statistics
             training_loss+=loss.item()
 
-            if i % 2000 == 1999:  # print every 2000 mini-batches
+            if i % 200 == 199:  # print every 2000 mini-batches
                 # ...log the running loss
-                writer_train.add_scalar('Loss',training_loss / len(trainloader),epoch * len(trainloader) + i)  # Card 2
+                #writer_train.add_scalar('Loss',training_loss / len(trainloader),epoch * len(trainloader) + i)  # Card 2
                 print('[%d, %5d] training loss: %.3f' %(epoch + 1, i + 1, training_loss / len(trainloader)))
                 training_loss = 0.0
 
@@ -72,16 +72,16 @@ def train(trainloader, valloader, experiment_name):
                 # print statistics
                 val_loss += loss_val.item()
 
-                if j % 2000 == 1999:
-                    writer_val.add_scalar('Loss', val_loss / len(valloader), epoch * len(valloader) + j)  # Card 2
+                if j % 200 == 199:
+                    #writer_val.add_scalar('Loss', val_loss / len(valloader), epoch * len(valloader) + j)  # Card 2
                     print('[%d, %5d] validation loss: %.3f' % (epoch + 1, j + 1, val_loss / len(valloader)))
                     val_loss = 0.0
 
 
 
     print("finished training phase")
-    writer_train.close()
-    writer_val.close()
+    #writer_train.close()
+    #writer_val.close()
 
 # learning rate decay means start with 10e-6 and go to 10-3
 
@@ -105,12 +105,15 @@ if __name__ == '__main__':
 
     trainloader, _, valloader=data_loader.datasetL()
     #net=vanilla_cnn.Net()
-    #net=VGG.Net()
-    net = resnet.ResNet()
+    net=VGG_new.VggNet()
+    #net = resnet.ResNet()
+    #net = inception.InceptionNet()
+    total_params = sum(p.numel() for p in net.parameters())
+    print(f"[INFO]: {total_params:,} total parameters.")
 
     criterion, optimizer=loss(net)
     scheduler=LRdecay(optimizer)
     train(trainloader, valloader, experiment_name)
 
-    PATH='experiments/models/VGG/A-architecture.pth'  # Card 3
+    PATH='experiments/models/z-architecture.pth'  # Card 3
     torch.save(net.state_dict( ), PATH)

@@ -26,8 +26,8 @@ import cv2
 # Tensorflow is static graph programming & PyTorch is Dynamic graph programming
 
 def train(trainloader, valloader, experiment_name):
-    writer_train = SummaryWriter('experiments/runs/{}/train'.format(experiment_name))
-    writer_val = SummaryWriter('experiments/runs/{}/val'.format(experiment_name))
+    #writer_train = SummaryWriter('experiments/runs/{}/train'.format(experiment_name))
+    #writer_val = SummaryWriter('experiments/runs/{}/val'.format(experiment_name))
 
     for epoch in range(NUM_EPOCHS):  # loop over the dataset multiple times
         training_loss=0.0
@@ -78,12 +78,12 @@ def train(trainloader, valloader, experiment_name):
                 val_loss += loss_val.item()
 
                 if j % 2000 == 1999:
-                    writer_val.add_scalar('Loss', val_loss / len(valloader), epoch * len(valloader) + j)  # Card 2
+                    #writer_val.add_scalar('Loss', val_loss / len(valloader), epoch * len(valloader) + j)  # Card 2
                     print('[%d, %5d] validation loss: %.3f' % (epoch + 1, j + 1, val_loss / len(valloader)))
                     val_loss = 0.0
     print("finished training phase")
-    writer_train.close()
-    writer_val.close()
+    #writer_train.close()
+    #writer_val.close()
 
 # learning rate decay means start with 10e-6 and go to 10-3
 

@@ -11,7 +11,7 @@ __status__ = "Research and Development"
 
 import torch.nn as nn
 import torch.nn.functional as F
-
+import torch
 # This is Afnan's first neural network from scratch :-)
 
 class Net(nn.Module):
@@ -27,6 +27,7 @@ class Net(nn.Module):
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
         x = self.pool(F.relu(self.conv2(x)))
+        #x = torch.flatten(x,1)  # flatten all dimensions except batch
         x = x.view(-1, 16 * 5 * 5)
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))

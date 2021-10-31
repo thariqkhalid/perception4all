@@ -23,7 +23,7 @@ def testing():
     net = vanilla_cnn.Net()
     _, testloader, _ = data_loader.datasetL()
     # print images
-    net.load_state_dict(torch.load('experiments/models/cifar_net.pth'))
+    net.load_state_dict(torch.load('experiments/models/n-architecture.pth'))
     correct = 0
     total = 0
 
@@ -52,8 +52,8 @@ def testing():
     test_probs = torch.cat([torch.stack(batch) for batch in class_probs]) # 16022019
     test_preds = torch.cat(class_preds) # 16022019
 
-    for i in range(10): # 16022019
-        add_pr_curve_tensorboard(i, test_probs, test_preds) # 16022019
+    #for i in range(10): # 16022019
+       # add_pr_curve_tensorboard(i, test_probs, test_preds) # 16022019
 
 # 16022019 helper function
 def add_pr_curve_tensorboard(class_index, test_probs, test_preds, global_step=0):

@@ -109,6 +109,7 @@ class InceptionNet(nn.Module):
         x = self.dropout(x)
         x = x.view(x.size(0), -1)
         x = F.softmax(self.fc(x), dim=0)
+
         return x,x1,x2
 
 

@@ -17,7 +17,7 @@ Important notes, should be highlighted!
 - I have to create the 6 architectures of VGG A, A-LRN, B, C, D,E,
  the differences in the number of conv layers. 
 - kernel size = 3x3, stride = 1, padding =1 for conv layers, kernel size for max pooling = 2x2 with stride = 2.
-- 3 fully connected layers, the first two one have 4096 channels, and the last one has 1000 channels,
+- 3 fully connected layers, the first two ones have 4096 channels, and the last one has 1000 channels,
  but for our dataset(CIFAR-10) it should be 10 channels
 '''
 
@@ -44,7 +44,7 @@ class VggNet(nn.Module):
         x = self.pool(F.relu((self.conv6(x))))
         x = F.relu((self.conv6(x)))
         x = self.pool(F.relu((self.conv6(x))))
-        x = x.view(-1, 512 * 6 * 6)
+        x = x.view( x.size(0), -1)
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
