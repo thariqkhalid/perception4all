@@ -30,7 +30,7 @@ To run this project, install it locally:
 
 ```
 ## Contact us
-* Afnan Qalas - linkedin.com/in/afnanbalghaith
+* Afnan Qalas - https://www.linkedin.com/in/afnanbalghaith/
 * Thariq KHalid - https://www.linkedin.com/in/thariqkhalid-deeplearning/
 
 ## Sources
