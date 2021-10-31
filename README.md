@@ -2,19 +2,12 @@
 This repo aims at implementing and explaining the neural networks in detail
 ## Table of contents
 * [Introduction](#introduction)
-* [Scope of functionalities](#scope-of-functionalities)
-* [Results](#results)
 * [Technologies](#technologies)
 * [Setup](#setup)
 * [Contact us](#contact-us)
 * [Sources](#sources)
 
 ## Introduction
-
-## Scope of functionalities
-
-
-## Results
 
 ## Technologies
 Project is created with:
