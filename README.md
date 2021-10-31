@@ -33,3 +33,4 @@ To run this project, install it locally:
 
 
 ## Sources
+This project is inspired by https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
