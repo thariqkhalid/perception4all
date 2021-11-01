@@ -40,6 +40,10 @@ Example:  python training.py --exp_name expr1
 * To run inception network 
 - run the following command python inception_training.py --exp_name (put a name from your choice).
 Example:  python inception_training.py --exp_name expr1
+
+For visualization, write the following command in a new terminal window:
+- tensorboard --logdir=experiments/runs
+
 ```
 * run the following command ...
 
@@ -51,6 +55,7 @@ Example:  python inception_training.py --exp_name expr1
 
 ## Sources
 This project is inspired by https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
+- Visualization - https://pytorch.org/tutorials/intermediate/tensorboard_tutorial.html
 - VGG network - https://arxiv.org/pdf/1409.1556.pdf
 - Resnet - https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/He_Deep_Residual_Learning_CVPR_2016_paper.pdf
 - Inception network - https://arxiv.org/pdf/1409.4842.pdf
