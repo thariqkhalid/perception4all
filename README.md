@@ -11,12 +11,35 @@ This repo aims at implementing and explaining the neural networks in detail
 
 ## Technologies
 Project is created with:
-* 
+* Python 3.7.6
+* tensorboard 2.1.0  
+* torch 1.6.0              
+* torchvision 0.5.0 
+* matplotlib 3.1.3 
+* numpy 1.18.1 
+
 
 ## Setup
 To run this project, install it locally:
-
+git clone https://github.com/thariqkhalid/perception4all.git
 * install all the required libraries [Technologies](#technologies)
+* cd ../perception4all/classification
+
+
+* To run VGG and resnet networks
+* - choose net=VGG.VggNet()or net = resnet.ResNet() in the training file and put the other networks as a comment. 
+- finally, run the following command python training.py --exp_name (put a name from your choice).
+Example:  python training.py --exp_name expr1
+
+* To run vanilla_cnn network  
+- remove transforms.Resize(224) from data_loader.py file.
+- choose net=vanilla_cnn.Net() in the training file and put the other networks as a comment. 
+- finally, run the following command python training.py --exp_name (put a name from your choice).
+Example:  python training.py --exp_name expr1 
+
+* To run inception network 
+- run the following command python inception_training.py --exp_name (put a name from your choice).
+Example:  python inception_training.py --exp_name expr1
 ```
 * run the following command ...
 
