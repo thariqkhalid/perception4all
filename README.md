@@ -8,7 +8,7 @@ This repo aims at implementing and explaining the neural networks in detail
 * [Sources](#sources)
 
 ## Introduction
-As the purpose of this repo is implementing neural networks, we chose to implement three different models VGG, Inception, Resnet from scratch since these three models have different structures and good examples for CNN. The three networks are implemented according to the descriptions that are mentioned in their papers [Sources](#sources). 
+As the purpose of this repo is implementing neural networks, we chose to implement three different models VGG, Inception, Resnet from scratch since these three models have different structures exemplify CNN. The three networks are implemented according to the descriptions that are mentioned in their papers [Sources](#sources). 
 
 ## Technologies
 Project is created with:
