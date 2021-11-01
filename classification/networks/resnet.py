@@ -1,7 +1,7 @@
 """
-__author__ = "Afnan Qalas Balghaith, Thariq Khalid"
+__author__ = "Afnan Qalas, Thariq Khalid"
 __copyright__ = "Copyright 2020, The Perception4all Project"
-__credits__ = ["Afnan Balghaith", "Thariq Khalid"]
+__credits__ = ["Afnan Qalas", "Thariq Khalid"]
 
 __maintainer__ = "Thariq Khalid"
 __email__ = "thariq.khalid@gmail.com"
@@ -87,24 +87,24 @@ class ResNet(nn.Module):
     def __init__ (self):
         super(ResNet,self).__init__()
 
-        # first stage
+        # 1st stage
         self.conv1 = nn.Conv2d(in_channels = 3,out_channels = 64,
                                kernel_size = (7,7),stride = (2,2),padding = (3,3))
         self.BN = nn.BatchNorm2d(64)
         self.pool = nn.MaxPool2d(kernel_size = (3,3),stride = (2,2),ceil_mode = True)
 
-        # second stage
+        # 2nd stage
         self.conv2_1 = convblock_module(conv2_x)
         self.conv2_2 = identityblock_module(conv2_x_identity)
         self.conv2_3 = identityblock_module(conv2_x_identity)
 
-        # third stage
+        # 3rd stage
         self.conv3_1 = convblock_module(conv3_x)
         self.conv3_2 = identityblock_module(conv3_x_identity)
         self.conv3_3 = identityblock_module(conv3_x_identity)
         self.conv3_4 = identityblock_module(conv3_x_identity)
 
-        # forth stage
+        # 4th stage
         self.conv4_1 = convblock_module(conv4_x)
         self.conv4_2 = identityblock_module(conv4_x_identity)
         self.conv4_3 = identityblock_module(conv4_x_identity)
@@ -112,7 +112,7 @@ class ResNet(nn.Module):
         self.conv4_5 = identityblock_module(conv4_x_identity)
         self.conv4_6 = identityblock_module(conv4_x_identity)
 
-        # fifth stage
+        # 5th stage
         self.conv5_1 = convblock_module(conv5_x)
         self.conv5_2 = identityblock_module(conv5_x_identity)
         self.conv5_3 = identityblock_module(conv5_x_identity)

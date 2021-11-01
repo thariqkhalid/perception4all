@@ -40,7 +40,7 @@ class inception_module(nn.Module):
 """
 • An average pooling layer with 5×5 filter size and stride 3, resulting in an 4×4×512 output
 for the (4a), and 4×4×528 for the (4d) stage.
-• A 1×1 convolution with 128 filters for dimension reduction and rectified linear activation.
+• A 1×1 convolution with 128 filter for dimension reduction and rectified linear activation.
 • A fully connected layer with 1024 units and rectified linear activation.  
 • A dropout layer with 70% ratio of dropped outputs.
 • A linear layer with softmax loss as the classifier (predicting the same 1000 classes as the main classifier, but removed at inference time).

@@ -1,18 +1,18 @@
 """
-__author__ = "Afnan Qalas Balghaith, Thariq Khalid"
+__author__ = "Afnan Qalas, Thariq Khalid"
 __copyright__ = "Copyright 2020, The Perception4all Project"
-__credits__ = ["Afnan Qalas Balghaith", "Thariq Khalid"]
+__credits__ = ["Afnan Qalas", "Thariq Khalid"]
 
 __maintainer__ = "Thariq Khalid"
 __email__ = "thariq.khalid@gmail.com"
 __status__ = "Research and Development"
 
 """
-#torch library
+
 import torch
 import torchvision
 import torchvision.transforms as transforms
-#local import
+
 from config import BATCH_SIZE
 
 def datasetL():

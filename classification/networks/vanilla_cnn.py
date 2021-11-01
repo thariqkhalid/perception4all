@@ -1,7 +1,7 @@
 """
-__author__ = "Afnan Qalas Balghaith, Thariq Khalid"
+__author__ = "Afnan Qalas, Thariq Khalid"
 __copyright__ = "Copyright 2020, The Perception4all Project"
-__credits__ = ["Afnan Balghaith", "Thariq Khalid"]
+__credits__ = ["Afnan Qalas", "Thariq Khalid"]
 
 __maintainer__ = "Thariq Khalid"
 __email__ = "thariq.khalid@gmail.com"
@@ -12,7 +12,7 @@ __status__ = "Research and Development"
 import torch.nn as nn
 import torch.nn.functional as F
 import torch
-# This is Afnan's first neural network from scratch :-)
+
 
 class Net(nn.Module):
     def __init__(self):
@@ -27,7 +27,6 @@ class Net(nn.Module):
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
         x = self.pool(F.relu(self.conv2(x)))
-        #x = torch.flatten(x,1)  # flatten all dimensions except batch
         x = x.view(-1, 16 * 5 * 5)
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
