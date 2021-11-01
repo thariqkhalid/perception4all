@@ -8,7 +8,7 @@ This repo aims at implementing and explaining the neural networks in detail
 * [Sources](#sources)
 
 ## Introduction
-As the purpose of this repo is implementing neural networks, we chose to implement three different models VGG, Inception, Resnet from scratch since these three models have different structures exemplify CNN. The three networks are implemented according to the descriptions that are mentioned in their papers [Sources](#sources). 
+As the purpose of this repo is implementing neural networks, we chose to implement three different models VGG, Inception, Resnet from scratch since these three models have different structures and good examples for CNN. The three networks are implemented according to the descriptions that are mentioned in their papers [Sources](#sources). 
 
 ## Technologies
 Project is created with:
@@ -28,7 +28,7 @@ To run this project, install it locally:
 
 
 To run VGG and resnet networks
-* choose net=VGG.VggNet()or net = resnet.ResNet() in training.py file and put the other networks as a comment. 
+* choose net=VGG.VggNet() or net = resnet.ResNet() in training.py file and put the other networks as a comment. 
 * run the following command python 
  ``` training.py --exp_name (put a name from your choice)```
 * Example:  ```python training.py --exp_name expr1```
@@ -36,12 +36,16 @@ To run VGG and resnet networks
 To run vanilla_cnn network  
 * remove transforms.Resize(224) from data_loader.py file.
 * choose net=vanilla_cnn.Net() in the training file and put the other networks as a comment. 
-* finally, run the following command ```python training.py --exp_name (put a name from your choice)```
-Example:  ```python training.py --exp_name expr1```
+* finally, run the following command 
+ ```python training.py --exp_name (put a name from your choice)```
+Example: 
+```python training.py --exp_name expr1```
 
 To run inception network 
-* run the following command python ```inception_training.py --exp_name (put a name from your choice)```
-Example:  ```python inception_training.py --exp_name expr1```
+* run the following command python 
+```inception_training.py --exp_name (put a name from your choice)```
+Example: 
+```python inception_training.py --exp_name expr1```
 
 For visualization, write the following command in a new terminal window:
 ```tensorboard --logdir=runs```
