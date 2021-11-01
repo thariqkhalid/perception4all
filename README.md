@@ -42,7 +42,7 @@ Example:  python training.py --exp_name expr1
 Example:  python inception_training.py --exp_name expr1
 
 For visualization, write the following command in a new terminal window:
-- tensorboard --logdir=experiments/runs
+- tensorboard --logdir=runs
 
 ```
 * run the following command ...
