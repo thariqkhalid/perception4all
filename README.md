@@ -31,7 +31,7 @@ To run VGG and resnet networks
 * choose net=VGG.VggNet() or net = resnet.ResNet() in training.py file and put the other networks as a comment. 
 * run the following command python: 
  
-``` training.py --exp_name (put a name from your choice)```
+ ```training.py --exp_name (put a name from your choice)```
 * Example:  
  ```python training.py --exp_name expr1```
 
@@ -39,18 +39,18 @@ To run vanilla_cnn network
 * remove transforms.Resize(224) from data_loader.py file.
 * choose net=vanilla_cnn.Net() in the training file and put the other networks as a comment. 
 * finally, run the following command 
-* ```python training.py --exp_name (put a name from your choice)```
+ ```python training.py --exp_name (put a name from your choice)```
 * Example: 
-* ```python training.py --exp_name expr1```
+ ```python training.py --exp_name expr1```
 
 To run inception network 
 * run the following command python 
-* ```inception_training.py --exp_name (put a name from your choice)```
+ ```inception_training.py --exp_name (put a name from your choice)```
 * Example: 
-* ```python inception_training.py --exp_name expr1```
+ ```python inception_training.py --exp_name expr1```
 
 * For visualization, write the following command in a new terminal window:
-* ```tensorboard --logdir=runs```
+ ```tensorboard --logdir=runs```
 
 ## Contact us
 * Afnan Qalas - https://www.linkedin.com/in/afnanbalghaith/
