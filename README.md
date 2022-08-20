@@ -58,13 +58,13 @@ To run inception network
  ```tensorboard --logdir=runs```
 
 ## Contact us
-* Afnan Qalas - https://www.linkedin.com/in/afnanbalghaith/
-* Thariq Khalid - https://www.linkedin.com/in/thariqkhalid-deeplearning/
+* [Afnan Qalas](https://www.linkedin.com/in/afnanbalghaith/)
+* [Thariq Khalid](https://www.linkedin.com/in/thariqkhalid-deeplearning/)
 
 ## Sources
-This project is inspired by https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
-- Visualization - https://pytorch.org/tutorials/intermediate/tensorboard_tutorial.html
-- VGG network - https://arxiv.org/pdf/1409.1556.pdf
-- Resnet - https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/He_Deep_Residual_Learning_CVPR_2016_paper.pdf
-- Inception network - https://arxiv.org/pdf/1409.4842.pdf
+This project is inspired by [cifar10_tutorial](https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html)
+- [Visualization](https://pytorch.org/tutorials/intermediate/tensorboard_tutorial.html)
+- [VGG network](https://arxiv.org/pdf/1409.1556.pdf)
+- [Resnet](https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/He_Deep_Residual_Learning_CVPR_2016_paper.pdf)
+- [Inception network](https://arxiv.org/pdf/1409.4842.pdf)
 
